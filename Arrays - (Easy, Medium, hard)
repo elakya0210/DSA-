@@ -113,3 +113,239 @@ Space Complexity: O(1) as no extra space is used
 
 # 6. Move Zeros to end
 
+class Solution {
+    public void moveZeroes(int[] arr) {
+        int j=-1;
+        for(int i=0;i<arr.length;i++){
+            if(arr[i]==0){
+                j=i;
+                break;
+            }
+        }
+        for(int i=j+1;i<arr.length;i++){
+            if(arr[i]!=0){
+                int temp=arr[i];
+                arr[i]=arr[j];
+                arr[j]=temp;
+                j++;
+            }
+        }
+    }
+}
+Time Complexity: O(N), N = size of the array.
+Reason: We have used 2 loops and using those loops, we are basically traversing the array once.
+Space Complexity: O(1) as we are not using any extra space to solve this problem.
+
+# 7. Union of 2 Sorted with Duplicates
+
+class Solution {
+    // Function to return a list containing the union of the two arrays.
+    public static ArrayList<Integer> findUnion(int a[], int b[]) {
+        // add your code here
+        int i=0;int j=0;
+        ArrayList<Integer> unionArray =new ArrayList<>();
+        while(i<a.length && j<b.length){
+            if(a[i]<=b[j]){
+                if(unionArray.size()==0 || unionArray.get(unionArray.size()-1) != a[i]){
+                    unionArray.add(a[i]);
+                }
+                i++;
+            }
+            else{
+                if(unionArray.size()==0 || unionArray.get(unionArray.size()-1) != b[j]){
+                    unionArray.add(b[j]);
+                }
+                j++;
+            }
+        }
+        while(i<a.length){
+            if(unionArray.size()==0 || unionArray.get(unionArray.size()-1) != a[i]){
+                    unionArray.add(a[i]);
+                }
+                i++;
+        }
+        while(j<b.length){
+            if(unionArray.size()==0 || unionArray.get(unionArray.size()-1) != b[j]){
+                    unionArray.add(b[j]);
+                }
+                j++;
+        }
+        return unionArray;
+    }
+}
+Time Complexity: O(m+n), Because at max i runs for n times and j runs for m times. When there are no common elements in arr1 and arr2 and all elements in arr1, arr2 are distinct.
+Space Complexity : O(m+n) {If Space of Union ArrayList is considered} 
+O(1) {If Space of union ArrayList is not considered}
+
+# 8. Missing Number 
+
+public static int missingNumber(int []a, int N) {
+        //Summation of first N numbers:
+        int sum = (N * (N + 1)) / 2;
+        //Summation of all array elements:
+        int s2 = 0;
+        for (int i = 0; i < N - 1; i++) {
+            s2 += a[i];
+        }
+        int missingNum = sum - s2;
+        return missingNum;
+    }
+
+class Solution {
+    public int missingNumber(int[] nums) {
+        int xor1=0;int xor2=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+            xor2=xor2 ^ nums[i];
+            xor1=xor1 ^ i;
+
+        }
+        xor1=xor1^n;
+        return xor1^xor2;
+    }
+}
+Time Complexity: O(N), where N = size of array+1.
+Reason: Here, we need only 1 loop to get the sum of the array elements. The loop runs for approx. N times. So, the time complexity is O(N).
+Space Complexity: O(1) as we are not using any extra space.
+
+# 9. Max Consecutive Ones
+
+class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int maxi=0;
+        int count=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]==1){
+                count++;
+                maxi=Math.max(count,maxi);
+            }
+            else{
+                count=0;
+            }
+        }
+        return maxi;
+    }
+}
+
+# 10. Single Element 
+
+[BETTER SOLUTION]
+    public static int getSingleElement(int []arr) {
+        int n = arr.length;        
+        HashMap<Integer, Integer> mpp = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int value = mpp.getOrDefault(arr[i], 0);
+            mpp.put(arr[i], value + 1);
+        }
+        for (Map.Entry<Integer, Integer> it : mpp.entrySet()) {
+            if (it.getValue() == 1) {
+                return it.getKey();
+            }
+        }
+        return -1;
+    }
+Time Complexity: O(N*logM) + O(M), where M = size of the map i.e. M = (N/2)+1. N = size of the array.
+Space Complexity: O(M) as we are using a map data structure. Here M = size of the map i.e. M = (N/2)+1.
+
+[OPTIMAL SOLUTION]
+class Solution {
+    public int singleNumber(int[] nums) {
+        int xor=0;
+        for(int i=0;i<nums.length;i++){
+            xor=xor^nums[i];
+        }
+        return xor;
+    }
+}
+
+# 11. Longest subarray with given sum K
+
+[Positive & Negative] - use HashMap
+class Solution {
+    public int longestSubarray(int[] arr, int k) {
+        Map<Integer,Integer> preSumMap=new HashMap<>();
+        int sum=0; int maxLen=0;
+        for(int i=0;i<arr.length;i++){
+            sum+=arr[i];
+            if(sum==k)
+                maxLen=Math.max(maxLen,i+1);
+            int rem=sum-k;
+            if(preSumMap.containsKey(rem)){
+                int len= i-preSumMap.get(rem);
+                maxLen=Math.max(maxLen,len);
+            }
+            if(!preSumMap.containsKey(sum)){
+                preSumMap.put(sum,i);
+            }
+       }        
+        return maxLen;
+    }
+}
+Time Complexity - O(N*logN) 
+Space Complexity - O(N)
+
+[only Positives] - use two pointer
+class Solution {
+    public int longestSubarray(int[] arr, int k) {
+        Map<Integer,Integer> preSumMap=new HashMap<>();
+        int sum=0; int maxLen=0;
+        for(int i=0;i<arr.length;i++){
+            sum+=arr[i];
+            if(sum==k)
+                maxLen=Math.max(maxLen,i+1);
+            int rem=sum-k;
+            if(preSumMap.containsKey(rem)){
+                int len= i-preSumMap.get(rem);
+                maxLen=Math.max(maxLen,len);
+            }
+            if(!preSumMap.containsKey(sum)){
+                preSumMap.put(sum,i);
+            }
+       }
+        
+        return maxLen;
+    }
+}
+Time Complexity: O(2*N)
+Space Complexity: O(1) 
+
+# 12. Two Sum 
+
+[Better Solution]
+public static String twoSum(int n, int []arr, int target) {
+        HashMap<Integer, Integer> mpp = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int num = arr[i];
+            int moreNeeded = target - num;
+            if (mpp.containsKey(moreNeeded)) {
+                return "YES";
+            }
+            mpp.put(arr[i], i);
+        }
+        return "NO";
+    }
+Time Complexity: O(N)
+Space Complexity: O(N) 
+
+[Optimal Solution]
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int ans[]={-1,-1};
+        Map<Integer,Integer> mpp=new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            int num=nums[i];
+            int moreNeeded=target-num;
+            if(mpp.containsKey(moreNeeded)){
+                ans[0]=mpp.get(moreNeeded);
+                ans[1]=i;
+            }
+            mpp.put(nums[i],i);
+        }
+        return ans;
+    }
+}
+Time Complexity: O(N) + O(N*logN), where N = size of the array.
+Reason: The loop will run at most N times. And sorting the array will take N*logN time complexity.
+Space Complexity: O(1) as we are not using any extra space.
+Note: Here we are distorting the given array. So, if we need to consider this change, the space complexity will be O(N).
+
