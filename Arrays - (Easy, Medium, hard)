@@ -349,3 +349,127 @@ Reason: The loop will run at most N times. And sorting the array will take N*log
 Space Complexity: O(1) as we are not using any extra space.
 Note: Here we are distorting the given array. So, if we need to consider this change, the space complexity will be O(N).
 
+# 13. Sort an array of 0s, 1s and 2s
+
+  [Dutch National flag algorithm]
+class Solution {
+    public void sortColors(int[] nums) {
+        int low=0;int mid=0;int high=nums.length-1;
+        while(mid<=high){
+        if(nums[mid]==0){
+            int temp=nums[low];
+            nums[low]=nums[mid];
+            nums[mid]=temp;
+            low++;
+            mid++;
+        }
+        else if(nums[mid]==1){
+            mid++;
+        }
+        else{
+            int temp=nums[high];
+            nums[high]=nums[mid];
+            nums[mid]=temp;
+            high--;
+        }
+        }
+    }
+}
+Time Complexity: O(N)
+Space Complexity: O(1)
+
+# 14. Majority Element (>n/2 times)
+
+[Better Solution]
+public static int majorityElement(int []v) {
+        int n = v.length;
+        HashMap<Integer, Integer> mpp = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            int value = mpp.getOrDefault(v[i], 0);
+            mpp.put(v[i], value + 1);
+        }
+        for (Map.Entry<Integer, Integer> it : mpp.entrySet()) {
+            if (it.getValue() > (n / 2)) {
+                return it.getKey();
+            }
+        }
+        return -1;
+    }
+Time Complexity: O(N*logN) + O(N)
+Space Complexity: O(N) 
+
+[Optimal Approach: Moore’s Voting Algorithm]
+class Solution {
+    public int majorityElement(int[] nums) {
+        int el=0;int count=0;
+        for(int i=0;i<nums.length;i++){
+            if(count==0){
+                count=1;
+                el=nums[i];
+            }
+            else if(nums[i]==el){
+                count++;
+            }
+            else{
+                count--;
+            }
+        }
+        int count1=0;
+        for(int i=0;i<nums.length;i++){
+            if(el==nums[i]) count1++;
+        }
+        if(count1>nums.length/2) return el;
+            return -1;
+    }
+}
+Time Complexity: O(N) + O(N)
+Note: If the question states that the array must contain a majority element, in that case, we do not need the second check. Then the time complexity will boil down to O(N).
+Space Complexity: O(1)
+
+# 15. Maximum subarray sum
+
+[Brute Force Solution]
+public static int maxSubarraySum(int[] arr, int n) {
+        int maxi = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += arr[j];
+                maxi = Math.max(maxi, sum); 
+            }
+        }
+
+[Kadane's Algorithm]
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int sum=0;int max=Integer.MIN_VALUE;
+        for(int i=0;i<nums.length;i++){
+            sum+=nums[i];
+            if(sum>=max){
+                max=sum;
+            }
+            if(sum<0) sum=0;
+        }
+        return max;
+    }
+}
+
+# 16. Maximum Score from Subarray Minimums
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int sum=0;int max=Integer.MIN_VALUE;
+        for(int i=0;i<nums.length;i++){
+            sum+=nums[i];
+            if(sum>=max){
+                max=sum;
+            }
+            if(sum<0) sum=0;
+        }
+        return max;
+    }
+}
+
+# 17. Best Time to Buy and Sell Stock
+
+
